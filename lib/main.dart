@@ -38,6 +38,30 @@ class _MyHomePageState extends State<MyHomePage> {
     scaffoldKey.currentState?.openDrawer();
   }
 
+  int _selectedIndex = 0;
+  static const TextStyle mainText = TextStyle(
+      fontWeight: FontWeight.bold, fontSize: 40, color: Colors.blueAccent);
+  static const List<Widget> _widgetOptions = <Widget>[
+    Text(
+      'Index 0: Photo',
+      style: mainText,
+    ),
+    Text(
+      'Index 1: Chat',
+      style: mainText,
+    ),
+    Text(
+      'Index 2: Albums',
+      style: mainText,
+    ),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,6 +163,9 @@ class _MyHomePageState extends State<MyHomePage> {
               label: 'Albums',
             ),
           ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.amber[800],
+          onTap: _onItemTapped,
         ),
       ),
       endDrawer: Drawer(
@@ -195,18 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton(
-              onPressed: () {},
-              child: const Text(
-                "Hello ",
-                style: TextStyle(color: Colors.red, fontSize: 50),
-              ),
-            )
-          ],
-        ),
+        child: _widgetOptions.elementAt(_selectedIndex),
       ),
     );
   }
