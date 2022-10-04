@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,71 +16,196 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+
+  final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<String> nav = ['Список 1', 'Список 2'];
-  final List fakeData = List.generate(100, (index) => index.toString());
+  int tabIndex = 0;
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Map<String, dynamic> data = {
-    'Мои фото': [
-      'https://picsum.photos/1200/501',
-      'https://picsum.photos/1200/502',
-      'https://picsum.photos/1200/503',
-      'https://picsum.photos/1200/504',
-      'https://picsum.photos/1200/505',
-      'https://picsum.photos/1200/506',
-      'https://picsum.photos/1200/507',
-      'https://picsum.photos/1200/508',
-      'https://picsum.photos/1200/509',
-      'https://picsum.photos/1200/510',
-    ],
-    'Галерея': [
-      'https://picsum.photos/1200/511',
-      'https://picsum.photos/1200/512',
-      'https://picsum.photos/1200/513',
-      'https://picsum.photos/1200/514',
-      'https://picsum.photos/1200/515',
-      'https://picsum.photos/1200/516',
-      'https://picsum.photos/1200/517',
-      'https://picsum.photos/1200/518',
-      'https://picsum.photos/1200/519',
-      'https://picsum.photos/1200/520',
-    ]
-  };
-  List names = [];
+  void openDrawer() {
+    scaffoldKey.currentState?.openDrawer();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: data.keys.length,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Homework example'),
-          bottom: TabBar(
-              tabs: (data.keys.map((String k) => Tab(text: k)).toList())),
-        ),
-        body: TabBarView(
-          children: data.keys.map((name) {
-            return ListView(
-              key: PageStorageKey(name),
-              children: <Widget>[
-                ...data[name].map((e) {
-                  return Image.network(e);
-                }).toList()
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+              icon: const Icon(Icons.person),
+            ),
+          )
+        ],
+      ),
+      drawer: Drawer(
+        backgroundColor: Colors.limeAccent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const DrawerHeader(
+              child: CircleAvatar(
+                radius: 60,
+                backgroundImage: NetworkImage(
+                    'https://mywordshindi.com/wp-content/uploads/2022/04/hidden-face-dp-girls-4.png'),
+              ),
+            ),
+            ListTile(
+              title: const Text('Home'),
+              leading: const Icon(Icons.home),
+              trailing: const Icon(Icons.arrow_forward),
+              onLongPress: () {},
+            ),
+            ListTile(
+              title: const Text('Profile'),
+              leading: const Icon(Icons.file_copy_outlined),
+              trailing: const Icon(Icons.arrow_forward),
+              onLongPress: () {},
+            ),
+            ListTile(
+              title: const Text('Images'),
+              leading: const Icon(Icons.image),
+              trailing: const Icon(Icons.arrow_forward),
+              onLongPress: () {},
+            ),
+            const SizedBox(
+              height: 200,
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green, // background
+                    onPrimary: Colors.red, // foreground
+                  ),
+                  onPressed: () {},
+                  child: const Text(
+                    'Выход',
+                    style: TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+                ),
+                const SizedBox(width: 30),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green, // background
+                    onPrimary: Colors.blue, // foreground
+                  ),
+                  onPressed: () {},
+                  child: const Text(
+                    'Регистрация',
+                    style: TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+                )
               ],
-            );
-          }).toList(),
+            )
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        elevation: 10,
+        notchMargin: 8,
+        clipBehavior: Clip.antiAlias,
+        child: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.photo),
+              label: 'Photo',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.chat),
+              label: 'Chat',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.album),
+              label: 'Albums',
+            ),
+          ],
+        ),
+      ),
+      endDrawer: Drawer(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              CircleAvatar(
+                radius: 60,
+                backgroundImage: NetworkImage(
+                    'https://mywordshindi.com/wp-content/uploads/2022/04/hidden-face-dp-girls-4.png'),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                'UserName',
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        icon: const Icon(Icons.add),
+        label: const Text('Open'),
+        onPressed: () {
+          showModalBottomSheet<void>(
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                  height: 200,
+                  color: Colors.amber,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        title: const Text('Сумма'),
+                        leading: const Icon(Icons.credit_card),
+                        trailing: const Text('200 rub.'),
+                        onLongPress: () {},
+                      ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: const Text('Оплатить'),
+                      ),
+                    ],
+                  ),
+                );
+              });
+        },
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+              onPressed: () {},
+              child: const Text(
+                "Hello ",
+                style: TextStyle(color: Colors.red, fontSize: 50),
+              ),
+            )
+          ],
         ),
       ),
     );
