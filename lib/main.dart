@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
       length: data.keys.length,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Homework example'),
+          title: Text('Homework'),
           bottom: TabBar(
               tabs: (data.keys.map((String k) => Tab(text: k)).toList())),
         ),
